@@ -7,6 +7,11 @@ export const signup = async (req, res, next) => {
     const { username, password, email } = req.body;
     const hashPass = bcrypt.hashSync(password, 10);
     const newUser = new User({ username, password: hashPass, email });
+    const minPasswordLength = 5;
+
+    if(password.length < minPasswordLength){
+        next(errorHandler(550,'Password length minimum ' + minPasswordLength));
+    }
 
     try {
         await newUser.save();
